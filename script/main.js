@@ -1,4 +1,5 @@
 var point=0;
+var timeout;
 function main(param) {
 	g.game.pushScene(MainGame());
 }
@@ -98,7 +99,7 @@ function MainGame()
 		group.append(label);
 		scene.append(group);
 
-		setTimeout(function()
+		timeout=setTimeout(function()
 		{
 			if(point==(nowpoint+targetcount))
 			{
@@ -127,6 +128,7 @@ function GameOver()
     });
 
 	scene.onLoad.add(function () {
+		clearTimeout(timeout)
 		var font = new g.DynamicFont({
 			game: g.game,
 			fontFamily: g.FontFamily.SansSerif,
