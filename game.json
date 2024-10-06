@@ -1,0 +1,22 @@
+{
+	"width": 1280,
+	"height": 720,
+	"fps": 30,
+	"main": "./script/main.js",
+	"assets": {
+		"bom": {
+			"type": "image",
+			"width": 800,
+			"height": 800,
+			"path": "image/Bom.png"
+		},
+		"main": {
+			"type": "script",
+			"path": "script/main.js",
+			"global": true
+		}
+	},
+	"environment": {
+		"sandbox-runtime": "3"
+	}
+}
