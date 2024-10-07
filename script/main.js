@@ -103,7 +103,7 @@ function createGameScene()
 		group.append(label);
 		scene.append(group);
 
-		timeout=scene.setTimeout(function()
+		timeout=setTimeout(function()
 		{
 			if(point==(nowpoint+targetcount))
 			{
@@ -133,7 +133,7 @@ function createGameOverScene()
     });
 
 	scene.onLoad.add(function () {
-		scene.clearTimeout(timeout)
+		clearTimeout(timeout)
 		var font = new g.DynamicFont
 		({
 			game: g.game,
