@@ -1,38 +1,39 @@
-var point=0;
-var timeout;
+let point=0;
+let timeout;
 function main(param) {
-	g.game.pushScene(MainGame());
+	g.game.pushScene(createGameScene());
 }
 
-function MainGame()
+function createGameScene()
 {
-	const scene = new g.Scene({
+	const scene = new g.Scene
+	({
         game: g.game,
         assetIds: ["bom"]
     });
 	const group=new g.E({scene:scene});
 
 
-    scene.onLoad.add(function () {
-        // ここからゲーム内容を記述します
-        // 各アセットオブジェクトを取得します
-        // プレイヤーを生成します
+    scene.onLoad.add(function ()
+	{
 		var bomImage = scene.asset.getImageById("bom");
-		var font = new g.DynamicFont({
+		var font = new g.DynamicFont
+		({
 			game: g.game,
 			fontFamily: g.FontFamily.SansSerif,
 			size: 15
-		  });
-		  let label = new g.Label({
-			scene: scene,
-			font: font,
-			text: String(point),
-			fontSize: 15,
-			textColor: "blue",
-			x: 1280/2,
-			y: 720/2
-		  });
-		  
+		});
+		let label = new g.Label
+		({
+		scene: scene,
+		font: font,
+		text: String(point),
+		fontSize: 15,
+		textColor: "blue",
+		x: 1280/2,
+		y: 720/2
+		});
+
 
 
 
@@ -55,7 +56,8 @@ function MainGame()
 		}
 		for(let i=0;i<random-targetcount;i++)
 		{
-			let bom= new g.Sprite({
+			let bom= new g.Sprite
+			({
 				scene: scene,
 				src: bomImage,
 				width: 800,
@@ -65,17 +67,18 @@ function MainGame()
 				x:Math.floor(g.game.localRandom.generate()*(g.game.width-50)),
 				y:Math.floor(g.game.localRandom.generate()*(g.game.height-50)),
 				touchable:true
-				});
+			});
 
 				bom.onPointDown.add(()=>
 				{
-					g.game.replaceScene(GameOver());
+					g.game.replaceScene(createGameOverScene());
 				})
 				group.append(bom);
 		}
 		for(let i=0;i<targetcount;i++)
 		{
-			let target = new g.FilledRect({
+			let target = new g.FilledRect
+			({
 				scene: scene,
 				width: 50,
 				height: 50,
@@ -84,7 +87,8 @@ function MainGame()
 				cssColor:"red",
 				touchable:true
 			});
-			target.onPointDown.add(function () 
+
+			target.onPointDown.add(function ()
 			{
 				point+=1;
 				label.text=String(point);
@@ -99,7 +103,7 @@ function MainGame()
 		group.append(label);
 		scene.append(group);
 
-		timeout=setTimeout(function()
+		timeout=scene.setTimeout(function()
 		{
 			if(point==(nowpoint+targetcount))
 			{
@@ -109,10 +113,10 @@ function MainGame()
 					label.text=String(point);
 					label.invalidate();
 				}
-				g.game.replaceScene(MainGame());
+				g.game.replaceScene(createGameScene());
 			}else
 			{
-				g.game.replaceScene(GameOver());
+				g.game.replaceScene(createGameOverScene());
 			}
 		},time);
 
@@ -121,20 +125,22 @@ function MainGame()
 }
 
 
-function GameOver()
+function createGameOverScene()
 {
 	const scene=new g.Scene({
         game: g.game,
     });
 
 	scene.onLoad.add(function () {
-		clearTimeout(timeout)
-		var font = new g.DynamicFont({
+		scene.clearTimeout(timeout)
+		var font = new g.DynamicFont
+	    ({
 			game: g.game,
 			fontFamily: g.FontFamily.SansSerif,
 			size: 50
-		  });
-		  let label = new g.Label({
+		});
+		let label = new g.Label
+		({
 			scene: scene,
 			font: font,
 			text: "GAME OVER",
@@ -142,9 +148,10 @@ function GameOver()
 			textColor: "red",
 			x: 1280/2,
 			y: 720/2
-		  });
+		});
 
-		  let score = new g.Label({
+		  let score = new g.Label
+		({
 			scene: scene,
 			font: font,
 			text: "スコア"+point,
@@ -152,16 +159,17 @@ function GameOver()
 			textColor: "blue",
 			x: 1280/2+50,
 			y: 720/2+50
-		  });
-		  scene.append(score);
-		  scene.append(label);
+		});
+		scene.append(score);
+		scene.append(label);
 
-		  scene.onPointDownCapture.add(function(){
+		scene.onPointDownCapture.add(function()
+		{
 			point=0;
-			g.game.replaceScene(MainGame());
-		  });
+			g.game.replaceScene(createGameScene());
+		});
 	})
-	  return scene;
+	return scene;
 }
 
 module.exports = main;
