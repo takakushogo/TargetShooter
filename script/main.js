@@ -25,13 +25,13 @@ function createGameScene()
 		});
 		let label = new g.Label
 		({
-		scene: scene,
-		font: font,
-		text: String(point),
-		fontSize: 15,
-		textColor: "blue",
-		x: 1280/2,
-		y: 720/2
+			scene: scene,
+			font: font,
+			text: String(point),
+			fontSize: 15,
+			textColor: "blue",
+			x: 1280/2,
+			y: 720/2
 		});
 
 
@@ -69,11 +69,11 @@ function createGameScene()
 				touchable:true
 			});
 
-				bom.onPointDown.add(()=>
-				{
-					g.game.replaceScene(createGameOverScene());
-				})
-				group.append(bom);
+			bom.onPointDown.add(()=>
+			{
+				g.game.replaceScene(createGameOverScene());
+			})
+			group.append(bom);
 		}
 		for(let i=0;i<targetcount;i++)
 		{
@@ -127,14 +127,15 @@ function createGameScene()
 
 function createGameOverScene()
 {
-	const scene=new g.Scene({
+	const scene=new g.Scene
+	({
         game: g.game,
     });
 
 	scene.onLoad.add(function () {
 		scene.clearTimeout(timeout)
 		var font = new g.DynamicFont
-	    ({
+		({
 			game: g.game,
 			fontFamily: g.FontFamily.SansSerif,
 			size: 50
@@ -151,7 +152,7 @@ function createGameOverScene()
 		});
 
 		  let score = new g.Label
-		({
+		  ({
 			scene: scene,
 			font: font,
 			text: "スコア"+point,
