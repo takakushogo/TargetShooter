@@ -1,5 +1,5 @@
 let point=0;
-var timeout;
+let timeout;
 function main(param) {
 	g.game.pushScene(createGameScene());
 }
