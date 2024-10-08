@@ -1,5 +1,5 @@
 let point=0;
-let timeout;
+var timeout;
 function main(param) {
 	g.game.pushScene(createGameScene());
 }
@@ -7,7 +7,7 @@ function main(param) {
 function createGameScene()
 {
 	const scene = new g.Scene
-	({
+    ({
         game: g.game,
         assetIds: ["bom"]
     });
@@ -71,6 +71,7 @@ function createGameScene()
 
 			bom.onPointDown.add(()=>
 			{
+                scene.clearTimeout(timeout);
 				g.game.replaceScene(createGameOverScene());
 			})
 			group.append(bom);
@@ -103,7 +104,7 @@ function createGameScene()
 		group.append(label);
 		scene.append(group);
 
-		timeout=setTimeout(function()
+		timeout=scene.setTimeout(function()
 		{
 			if(point==(nowpoint+targetcount))
 			{
@@ -119,7 +120,6 @@ function createGameScene()
 				g.game.replaceScene(createGameOverScene());
 			}
 		},time);
-
     });
 	return scene;
 }
@@ -133,7 +133,6 @@ function createGameOverScene()
     });
 
 	scene.onLoad.add(function () {
-		clearTimeout(timeout)
 		var font = new g.DynamicFont
 		({
 			game: g.game,
