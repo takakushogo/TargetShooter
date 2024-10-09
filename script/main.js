@@ -1,11 +1,11 @@
-let point=0;
-let specialPoint=0;
+//let point=0;
+//let specialPoint=0;
 let timeout;
 function main(param) {
-	g.game.pushScene(createGameScene());
+	g.game.pushScene(createGameScene(0));
 }
 
-function createGameScene()
+function createGameScene(point)
 {
 	const scene = new g.Scene
     ({
@@ -29,7 +29,7 @@ function createGameScene()
 		({
 			scene: scene,
 			font: font,
-			text: String((point+specialPoint)),
+			text: `${point}`,
 			fontSize: 15,
 			textColor: "blue",
 			x: 1280/2,
@@ -38,11 +38,11 @@ function createGameScene()
 
 
 
-
+		let specialPoint=0;
 		const nowpoint=point;
-		const random=Math.floor(g.game.localRandom.generate()*10)+1;
-		const targetcount=Math.floor(g.game.localRandom.generate()*random);
-        const specialCount=Math.floor(g.game.localRandom.generate()*5);
+		const random=Math.floor(g.game.random.generate()*10)+1;
+		const targetcount=Math.floor(g.game.random.generate()*random);
+        const specialCount=Math.floor(g.game.random.generate()*5);
 		let time=1000;
 		if(random-targetcount==0)
 		{
@@ -59,8 +59,8 @@ function createGameScene()
 		}
 		for(let i=0;i<random-targetcount;i++)
 		{
-            const positionx=g.game.localRandom.generate()*(g.game.width-50);
-            const positiony=g.game.localRandom.generate()*(g.game.height-50);
+            const positionx=g.game.random.generate()*(g.game.width-50);
+            const positiony=g.game.random.generate()*(g.game.height-50);
             const bom= new g.Sprite
             ({
                 scene: scene,
@@ -77,7 +77,7 @@ function createGameScene()
             bom.onPointDown.add(()=>
             {
                 scene.clearTimeout(timeout);
-                g.game.replaceScene(createGameOverScene());
+                g.game.replaceScene(createGameOverScene(point+specialPoint));
             })
             group.append(bom);
 
@@ -99,7 +99,7 @@ function createGameScene()
                 specialTarget.onPointDown.add(function ()
                 {
                     specialPoint+=3;
-                    label.text=String((point+specialPoint));
+                    label.text=`${point+specialPoint}`;
                     group.remove(specialTarget);
                     label.invalidate();
                 });
@@ -115,8 +115,8 @@ function createGameScene()
                 src:targetImage,
 				width: 500,
 				height: 500,
-				x:Math.floor(g.game.localRandom.generate()*(g.game.width-50)),
-				y:Math.floor(g.game.localRandom.generate()*(g.game.height-50)),
+				x:Math.floor(g.game.random.generate()*(g.game.width-50)),
+				y:Math.floor(g.game.random.generate()*(g.game.height-50)),
                 scaleX:0.1,
                 scaleY:0.1,
 				cssColor:"red",
@@ -126,7 +126,7 @@ function createGameScene()
 			target.onPointDown.add(function ()
 			{
 				point+=1;
-				label.text=String((point+specialPoint));
+				label.text=`${point+specialPoint}`;
 				group.remove(target);
 				label.invalidate();
 			});
@@ -145,13 +145,13 @@ function createGameScene()
 				if(targetcount==0)
 				{
 					point+=1;
-					label.text=String((point+specialPoint));
+					label.text=`${point+specialPoint}`;
 					label.invalidate();
 				}
-				g.game.replaceScene(createGameScene());
+				g.game.replaceScene(createGameScene(point+specialPoint));
 			}else
 			{
-				g.game.replaceScene(createGameOverScene());
+				g.game.replaceScene(createGameOverScene(point+specialPoint));
 			}
 		},time);
     });
@@ -159,7 +159,7 @@ function createGameScene()
 }
 
 
-function createGameOverScene()
+function createGameOverScene(point)
 {
 	const scene=new g.Scene
 	({
@@ -188,7 +188,7 @@ function createGameOverScene()
 		({
 			scene: scene,
 			font: font,
-			text: "スコア"+String((point+specialPoint)),
+			text: "スコア"+`${point}`,
 			fontSize: 50,
 			textColor: "blue",
 			x: 1280/2+50,
@@ -199,9 +199,7 @@ function createGameOverScene()
 
 		scene.onPointDownCapture.add(function()
 		{
-			point=0;
-            specialPoint=0;
-			g.game.replaceScene(createGameScene());
+			g.game.replaceScene(createGameScene(0));
 		});
 	})
 	return scene;
