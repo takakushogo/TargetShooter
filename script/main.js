@@ -1,6 +1,3 @@
-//let point=0;
-//let specialPoint=0;
-let timeout;
 function main(param) {
 	g.game.pushScene(createGameScene(0));
 }
@@ -37,7 +34,7 @@ function createGameScene(point)
 		});
 
 
-
+		let timeout;
 		let specialPoint=0;
 		const nowpoint=point;
 		const random=Math.floor(g.game.random.generate()*10)+1;
