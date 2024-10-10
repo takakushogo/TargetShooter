@@ -1,6 +1,82 @@
 function main(param) {
-	g.game.pushScene(createGameScene(0));
+    g.game.pushScene(createTitleScene());
 }
+
+
+function createTitleScene()
+{
+    const scene = new g.Scene
+    ({
+        game: g.game,
+        assetIds: ["target"]
+    });
+    scene.onLoad.add(function()
+    {
+        const group=new g.E({scene:scene});
+
+        const titleFont = new g.DynamicFont
+        ({
+            game: g.game,
+            fontFamily: g.FontFamily.SansSerif,
+            size: 50
+        });
+        const titleLabel = new g.Label
+        ({
+            scene: scene,
+            font: titleFont,
+            text: "ターゲットを撃て!",
+            fontSize: 50,
+            textColor: "black",
+            anchorX:0.5,
+            x: 1280/2,
+            y: 720/2,
+        });
+
+        const buttonFont = new g.DynamicFont
+        ({
+            game: g.game,
+            fontFamily: g.FontFamily.SansSerif,
+            size: 30
+        });
+        const buttonLabel=new g.Label
+        ({
+            scene: scene,
+            font: buttonFont,
+            text: "Press Start",
+            fontSize: 30,
+            textColor: "black",
+            anchorX:0.5,
+            x: 1280/2,
+            y: 720/2+100
+        })
+
+        const targetImage = scene.asset.getImageById("target");
+        const backImage=new g.Sprite
+        ({
+            scene: scene,
+            src:targetImage,
+            width: 500,
+            height: 500,
+            anchorX:0.5,
+            anchorY:0.5,
+            x:1280/2,
+            y:720/2,
+            scaleX:2.5,
+            scaleY:2.5
+        });
+
+        group.append(backImage);
+        group.append(titleLabel);
+        group.append(buttonLabel);
+        scene.append(group);
+    });
+    scene.onPointDownCapture.add(function()
+    {
+        g.game.replaceScene(createGameScene(0));
+    });
+    return scene;
+}
+
 
 function createGameScene(point)
 {
