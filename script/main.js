@@ -1,33 +1,32 @@
-let point=0;
-let timeout;
 function main(param) {
-	g.game.pushScene(createGameScene());
+	g.game.pushScene(createGameScene(0));
 }
 
-function createGameScene()
+function createGameScene(point)
 {
 	const scene = new g.Scene
     ({
         game: g.game,
-        assetIds: ["bom"]
+        assetIds: ["bom","target"]
     });
 	const group=new g.E({scene:scene});
 
 
     scene.onLoad.add(function ()
 	{
-		var bomImage = scene.asset.getImageById("bom");
-		var font = new g.DynamicFont
+		const bomImage = scene.asset.getImageById("bom");
+        const targetImage = scene.asset.getImageById("target");
+		const font = new g.DynamicFont
 		({
 			game: g.game,
 			fontFamily: g.FontFamily.SansSerif,
 			size: 15
 		});
-		let label = new g.Label
+		const label = new g.Label
 		({
 			scene: scene,
 			font: font,
-			text: String(point),
+			text: `${point}`,
 			fontSize: 15,
 			textColor: "blue",
 			x: 1280/2,
@@ -35,11 +34,12 @@ function createGameScene()
 		});
 
 
-
-
-		let nowpoint=point;
-		let random=Math.floor(g.game.localRandom.generate()*10)+1;
-		let targetcount=Math.floor(g.game.localRandom.generate()*random);
+		let timeout;
+		let specialPoint=0;
+		const nowpoint=point;
+		const random=Math.floor(g.game.random.generate()*10)+1;
+		const targetcount=Math.floor(g.game.random.generate()*random);
+        const specialCount=Math.floor(g.game.random.generate()*5);
 		let time=1000;
 		if(random-targetcount==0)
 		{
@@ -56,35 +56,66 @@ function createGameScene()
 		}
 		for(let i=0;i<random-targetcount;i++)
 		{
-			let bom= new g.Sprite
-			({
-				scene: scene,
-				src: bomImage,
-				width: 800,
-				height: 800,
-				scaleX:0.2,
-				scaleY:0.2,
-				x:Math.floor(g.game.localRandom.generate()*(g.game.width-50)),
-				y:Math.floor(g.game.localRandom.generate()*(g.game.height-50)),
-				touchable:true
-			});
+            const positionx=g.game.random.generate()*(g.game.width-50);
+            const positiony=g.game.random.generate()*(g.game.height-50);
+            const bom= new g.Sprite
+            ({
+                scene: scene,
+                src: bomImage,
+                width: 800,
+                height: 800,
+                scaleX:0.2,
+                scaleY:0.2,
+                x:Math.floor(positionx),
+                y:Math.floor(positiony),
+                touchable:true
+            });
 
-			bom.onPointDown.add(()=>
-			{
+            bom.onPointDown.add(()=>
+            {
                 scene.clearTimeout(timeout);
-				g.game.replaceScene(createGameOverScene());
-			})
-			group.append(bom);
+                g.game.replaceScene(createGameOverScene(point+specialPoint));
+            })
+            group.append(bom);
+
+            if(i==targetcount-1 && specialCount==0)
+            {
+                const specialTarget=new g.Sprite
+                ({
+                    scene: scene,
+                    src:targetImage,
+                    width: 500,
+                    height: 500,
+                    x:Math.floor(positionx)+60,
+                    y:Math.floor(positiony)+85,
+                    scaleX:0.05,
+                    scaleY:0.05,
+                    cssColor:"Yellow",
+                    touchable:true
+                });
+                specialTarget.onPointDown.add(function ()
+                {
+                    specialPoint+=3;
+                    label.text=`${point+specialPoint}`;
+                    group.remove(specialTarget);
+                    label.invalidate();
+                });
+
+                group.append(specialTarget);
+            }
 		}
 		for(let i=0;i<targetcount;i++)
 		{
-			let target = new g.FilledRect
+            const target = new g.Sprite
 			({
 				scene: scene,
-				width: 50,
-				height: 50,
-				x:Math.floor(g.game.localRandom.generate()*(g.game.width-50)),
-				y:Math.floor(g.game.localRandom.generate()*(g.game.height-50)),
+                src:targetImage,
+				width: 500,
+				height: 500,
+				x:Math.floor(g.game.random.generate()*(g.game.width-50)),
+				y:Math.floor(g.game.random.generate()*(g.game.height-50)),
+                scaleX:0.1,
+                scaleY:0.1,
 				cssColor:"red",
 				touchable:true
 			});
@@ -92,7 +123,7 @@ function createGameScene()
 			target.onPointDown.add(function ()
 			{
 				point+=1;
-				label.text=String(point);
+				label.text=`${point+specialPoint}`;
 				group.remove(target);
 				label.invalidate();
 			});
@@ -111,13 +142,13 @@ function createGameScene()
 				if(targetcount==0)
 				{
 					point+=1;
-					label.text=String(point);
+					label.text=`${point+specialPoint}`;
 					label.invalidate();
 				}
-				g.game.replaceScene(createGameScene());
+				g.game.replaceScene(createGameScene(point+specialPoint));
 			}else
 			{
-				g.game.replaceScene(createGameOverScene());
+				g.game.replaceScene(createGameOverScene(point+specialPoint));
 			}
 		},time);
     });
@@ -125,7 +156,7 @@ function createGameScene()
 }
 
 
-function createGameOverScene()
+function createGameOverScene(point)
 {
 	const scene=new g.Scene
 	({
@@ -133,13 +164,13 @@ function createGameOverScene()
     });
 
 	scene.onLoad.add(function () {
-		var font = new g.DynamicFont
+		const font = new g.DynamicFont
 		({
 			game: g.game,
 			fontFamily: g.FontFamily.SansSerif,
 			size: 50
 		});
-		let label = new g.Label
+		const label = new g.Label
 		({
 			scene: scene,
 			font: font,
@@ -150,11 +181,11 @@ function createGameOverScene()
 			y: 720/2
 		});
 
-		  let score = new g.Label
-		  ({
+		const score = new g.Label
+		({
 			scene: scene,
 			font: font,
-			text: "スコア"+point,
+			text: "スコア"+`${point}`,
 			fontSize: 50,
 			textColor: "blue",
 			x: 1280/2+50,
@@ -165,8 +196,7 @@ function createGameOverScene()
 
 		scene.onPointDownCapture.add(function()
 		{
-			point=0;
-			g.game.replaceScene(createGameScene());
+			g.game.replaceScene(createGameScene(0));
 		});
 	})
 	return scene;

@@ -10,6 +10,12 @@
 			"height": 800,
 			"path": "image/Bom.png"
 		},
+		"target": {
+			"type": "image",
+			"width": 500,
+			"height": 500,
+			"path": "image/Target.png"
+		},
 		"main": {
 			"type": "script",
 			"path": "script/main.js",
